@@ -41,17 +41,18 @@ pipeline {
     }
 
     stage('Deploy to EC2') {
-  steps {
-    sshagent(credentials: ['ec2-ssh-key']) {
-      sh """
-        ssh -o StrictHostKeyChecking=no ubuntu@${EC2_HOST} '
-          sudo docker pull ${IMAGE} &&
-          sudo docker stop devopsapp || true &&
-          sudo docker rm devopsapp || true &&
-          sudo docker run -d -p 5000:5000 --name devopsapp ${IMAGE}
-        '
-      """
+      steps {
+        sshagent(credentials: ['ec2-ssh-key']) {
+          sh """
+            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_HOST} '
+              sudo docker pull ${IMAGE} &&
+              sudo docker stop devopsapp || true &&
+              sudo docker rm devopsapp || true &&
+              sudo docker run -d -p 5000:5000 --name devopsapp ${IMAGE}
+            '
+          """
+        }
+      }
     }
   }
-}
 }
